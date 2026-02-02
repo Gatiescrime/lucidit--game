@@ -71,10 +71,62 @@
             z-index: 10;
         }
         
+        /* Global Countdown Timer */
+        .global-timer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1001;
+            text-align: center;
+            padding: 0.4rem 1rem;
+            border-bottom: 1px solid rgba(127, 176, 105, 0.3);
+            font-family: 'Syne', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        
+        .global-timer-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .global-timer-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--light);
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+            transition: color 0.5s ease;
+        }
+        
+        .global-timer-value.warning {
+            color: var(--warning);
+        }
+        
+        .global-timer-value.critical {
+            color: var(--error);
+            animation: timerPulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .global-timer-value.expired {
+            color: var(--error);
+        }
+        
         /* Lucidity Meter */
         .lucidity-meter {
             position: fixed;
-            top: 0;
+            top: 2.2rem;
             left: 0;
             right: 0;
             background: rgba(0, 0, 0, 0.7);
@@ -169,7 +221,7 @@
         
         /* Container */
         .container {
-            padding: 7rem 1rem 2rem;
+            padding: 9.5rem 1rem 2rem;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -516,8 +568,274 @@
         }
         
         /* ============================================
-           FOG LAYER - Multiple small smoke clouds
+           ESCAPE GAME - Clue Modal & Lock Screen
         ============================================ */
+        
+        /* Clue status badges on menu cards */
+        .clue-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            z-index: 5;
+            transition: all 0.4s ease;
+        }
+        
+        .clue-badge.locked {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .clue-badge.unlocked {
+            background: rgba(127, 176, 105, 0.9);
+            border: 2px solid var(--light);
+            box-shadow: 0 0 12px rgba(127, 176, 105, 0.5);
+        }
+        
+        /* Clue modal overlay */
+        .clue-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            animation: fadeIn 0.5s ease;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        
+        .clue-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .clue-card {
+            background: linear-gradient(145deg, rgba(26, 46, 15, 0.95), rgba(45, 80, 22, 0.9));
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 40px rgba(127, 176, 105, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: clueAppear 0.6s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        
+        @keyframes clueAppear {
+            from { transform: scale(0.85) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        
+        .clue-card-scene {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--warning);
+            margin-bottom: 0.75rem;
+        }
+        
+        .clue-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 8px rgba(127, 176, 105, 0.6));
+        }
+        
+        .clue-card-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 1.25rem;
+        }
+        
+        .clue-card-text {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.85);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+        }
+        
+        .clue-card-progress {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 1.25rem;
+        }
+        
+        .clue-card .btn {
+            max-width: 280px;
+            margin: 0.3rem auto;
+            display: block;
+        }
+        
+        /* Lock screen */
+        .lock-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .lock-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: var(--light);
+        }
+        
+        .lock-narrative {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .lock-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .lock-field-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .lock-field-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--warning);
+            width: 90px;
+            flex-shrink: 0;
+            text-align: right;
+        }
+        
+        .lock-field-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(127, 176, 105, 0.4);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-family: 'Azeret Mono', monospace;
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 2px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .lock-field-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(127, 176, 105, 0.3);
+        }
+        
+        .lock-field-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 1px;
+        }
+        
+        .lock-feedback {
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .lock-feedback.error {
+            background: rgba(196, 69, 54, 0.2);
+            border: 1px solid rgba(196, 69, 54, 0.4);
+            color: #e8a099;
+        }
+        
+        .lock-feedback.success {
+            background: rgba(127, 176, 105, 0.2);
+            border: 1px solid rgba(127, 176, 105, 0.4);
+            color: var(--light);
+        }
+        
+        /* Final success screen */
+        .final-success {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+        
+        .final-success-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: finalPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes finalPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(127, 176, 105, 0.4)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(127, 176, 105, 0.7)); }
+        }
+        
+        .final-success-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--light);
+            margin-bottom: 1.5rem;
+        }
+        
+        .final-success-text {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 480px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Lock card on menu - special styling */
+        .game-card.lock-menu-card {
+            border-color: rgba(255, 255, 255, 0.15);
+            opacity: 0.4;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        
+        .game-card.lock-menu-card.unlocked {
+            border-color: var(--warning);
+            opacity: 1;
+            pointer-events: all;
+            box-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
+        }
+        
+        .game-card.lock-menu-card.unlocked:hover {
+            box-shadow: 0 8px 30px rgba(212, 163, 115, 0.4);
+        }
+        
+        .game-card.completed .clue-badge.unlocked {
+            background: rgba(127, 176, 105, 0.9);
+        }
         #fog-layer {
             position: fixed;
             inset: 0;
@@ -553,6 +871,12 @@
     <!-- Fog Layer (visual effect only) -->
     <div id="fog-layer"></div>
     
+    <!-- Global Countdown Timer -->
+    <div class="global-timer" id="globalTimer">
+        <div class="global-timer-label">Temps restant</div>
+        <div class="global-timer-value" id="globalTimerValue">60:00</div>
+    </div>
+    
     <!-- Lucidity Meter -->
     <div class="lucidity-meter">
         <div class="meter-content">
@@ -561,7 +885,7 @@
                 <div class="meter-bar-wrapper">
                     <div class="meter-bar" id="lucidityBar"></div>
                 </div>
-                <div class="meter-value" id="lucidityValue">3 / 10</div>
+                <div class="meter-value" id="lucidityValue">7 / 10</div>
             </div>
             <div class="lucidity-controls">
                 <button class="lucidity-btn" id="decreaseLucidity" onclick="adjustLucidity(-1)" title="Diminuer la lucidité">−</button>
@@ -571,49 +895,68 @@
     </div>
     
     <div class="container">
+        <!-- Clue Modal Overlay -->
+        <div class="clue-overlay" id="clueOverlay">
+            <div class="clue-card" id="clueCard"></div>
+        </div>
+        
         <!-- Main Menu -->
         <div class="screen active" id="menuScreen">
-            <h1 class="menu-title">Effets Cognitifs</h1>
-            <p class="menu-subtitle">Expérimentez les impacts du cannabis à travers 5 mini-jeux</p>
+            <h1 class="menu-title">La journée de Léo</h1>
+            <p class="menu-subtitle">Traversez sa journée, récoltez les indices, trouvez la sortie.</p>
             
             <div class="game-grid">
-                <div class="game-card" onclick="startGame('memory')">
-                    <img src="" alt="Les souvenirs flous" class="game-card-image" id="img-memory">
+                <div class="game-card" onclick="startGame('memory')" id="card-memory">
+                    <span class="clue-badge locked" id="badge-memory">🔒</span>
+                    <img src="" alt="La chambre de Léo" class="game-card-image" id="img-memory">
                     <div class="game-card-content">
-                        <div class="game-card-title">Les souvenirs flous</div>
+                        <div class="game-card-title">La chambre de Léo</div>
                         <div class="game-card-effect">Mémoire</div>
                     </div>
                 </div>
                 
-                <div class="game-card" onclick="startGame('reflex')">
-                    <img src="" alt="Le mauvais timing" class="game-card-image" id="img-reflex">
+                <div class="game-card" onclick="startGame('reflex')" id="card-reflex">
+                    <span class="clue-badge locked" id="badge-reflex">🔒</span>
+                    <img src="" alt="Le passage piéton" class="game-card-image" id="img-reflex">
                     <div class="game-card-content">
-                        <div class="game-card-title">Le mauvais timing</div>
+                        <div class="game-card-title">Le passage piéton</div>
                         <div class="game-card-effect">Réflexes & coordination</div>
                     </div>
                 </div>
                 
-                <div class="game-card" onclick="startGame('concentration')">
-                    <img src="" alt="L'esprit ailleurs" class="game-card-image" id="img-concentration">
+                <div class="game-card" onclick="startGame('concentration')" id="card-concentration">
+                    <span class="clue-badge locked" id="badge-concentration">🔒</span>
+                    <img src="" alt="La salle de classe" class="game-card-image" id="img-concentration">
                     <div class="game-card-content">
-                        <div class="game-card-title">L'esprit ailleurs</div>
+                        <div class="game-card-title">La salle de classe</div>
                         <div class="game-card-effect">Concentration & attention</div>
                     </div>
                 </div>
                 
-                <div class="game-card" onclick="startGame('decision')">
-                    <img src="" alt="Sous pression" class="game-card-image" id="img-decision">
+                <div class="game-card" onclick="startGame('decision')" id="card-decision">
+                    <span class="clue-badge locked" id="badge-decision">🔒</span>
+                    <img src="" alt="La soirée entre amis" class="game-card-image" id="img-decision">
                     <div class="game-card-content">
-                        <div class="game-card-title">Sous pression</div>
+                        <div class="game-card-title">La soirée entre amis</div>
                         <div class="game-card-effect">Prise de décision</div>
                     </div>
                 </div>
                 
-                <div class="game-card" onclick="startGame('time')">
-                    <img src="" alt="Le temps suspendu" class="game-card-image" id="img-time">
+                <div class="game-card" onclick="startGame('time')" id="card-time">
+                    <span class="clue-badge locked" id="badge-time">🔒</span>
+                    <img src="" alt="La nuit qui s'étire" class="game-card-image" id="img-time">
                     <div class="game-card-content">
-                        <div class="game-card-title">Le temps suspendu</div>
+                        <div class="game-card-title">La nuit qui s'étire</div>
                         <div class="game-card-effect">Perception du temps</div>
+                    </div>
+                </div>
+                
+                <!-- Final Lock Card - Sortie -->
+                <div class="game-card lock-menu-card unlocked" onclick="startGame('lock')" id="card-lock">
+                    <div class="game-card-content" style="padding: 2rem 1.5rem; text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;" id="lock-icon">🚪</div>
+                        <div class="game-card-title" style="text-align: center;">Sortie</div>
+                        <div class="game-card-effect" style="text-align: center;" id="lock-status">5 indices manquants</div>
                     </div>
                 </div>
             </div>
@@ -625,12 +968,255 @@
         <div class="screen" id="concentrationScreen"></div>
         <div class="screen" id="decisionScreen"></div>
         <div class="screen" id="timeScreen"></div>
+        <div class="screen" id="lockScreen"></div>
     </div>
     
     <script>
         // GLOBAL STATE
-        let lucidityLevel = 3;
+        let lucidityLevel = 7;
         let currentGame = null;
+        
+        // ============================================
+        // ESCAPE GAME STATE
+        // ============================================
+        const escapeState = {
+            clues: {
+                memory: { unlocked: false, scene: 'La chambre de Léo', icon: '🛏️', text: 'En regardant autour de toi, un détail refait surface. Ce n\'est pas une date, mais un moment précis de la matinée. Celui où tout devait commencer.' },
+                reflex: { unlocked: false, scene: 'Le passage piéton', icon: '🚦', text: 'Tu lèves les yeux juste à temps. La couleur qui t\'autorise à avancer est la seule qui compte. Ce n\'est ni l\'attente, ni l\'arrêt.' },
+                concentration: { unlocked: false, scene: 'La salle de classe', icon: '📖', text: 'La réponse était là depuis le début. Une année clé que tout le monde apprend à l\'école. Celle qui marque la fin d\'un conflit mondial.' },
+                decision: { unlocked: false, scene: 'La soirée entre amis', icon: '🎉', text: 'Tu réalises que répondre ne veut pas dire expliquer. Un seul mot suffit parfois pour poser une limite claire. Court. Simple. Définitif.' },
+                time: { unlocked: false, scene: 'La nuit qui s\'étire', icon: '🌙', text: 'Tu regardes enfin l\'écran. Ce n\'est plus vraiment le soir. L\'heure affichée montre que la journée est presque terminée.' }
+            },
+            lockCompleted: false
+        };
+        
+        function getUnlockedCount() {
+            return Object.values(escapeState.clues).filter(c => c.unlocked).length;
+        }
+        
+        function allCluesUnlocked() {
+            return getUnlockedCount() === 5;
+        }
+        
+        // Update menu badges and lock card status
+        function updateEscapeUI() {
+            for (const [key, clue] of Object.entries(escapeState.clues)) {
+                const badge = document.getElementById('badge-' + key);
+                if (badge) {
+                    if (clue.unlocked) {
+                        badge.className = 'clue-badge unlocked';
+                        badge.textContent = '🔓';
+                    } else {
+                        badge.className = 'clue-badge locked';
+                        badge.textContent = '🔒';
+                    }
+                }
+            }
+            
+            const lockStatus = document.getElementById('lock-status');
+            const lockIcon = document.getElementById('lock-icon');
+            const count = getUnlockedCount();
+            const remaining = 5 - count;
+            
+            if (escapeState.lockCompleted) {
+                lockStatus.textContent = 'Terminé';
+                lockIcon.textContent = '✨';
+            } else if (allCluesUnlocked()) {
+                lockStatus.textContent = 'Tous les indices récoltés';
+                lockIcon.textContent = '🚪';
+            } else {
+                lockStatus.textContent = count + '/5 indices récoltés';
+                lockIcon.textContent = '🚪';
+            }
+        }
+        
+        // Show clue modal after game success
+        function showClueModal(gameKey) {
+            const clue = escapeState.clues[gameKey];
+            if (!clue) return;
+            
+            clue.unlocked = true;
+            updateEscapeUI();
+            
+            const count = getUnlockedCount();
+            const overlay = document.getElementById('clueOverlay');
+            const card = document.getElementById('clueCard');
+            
+            const lockMsg = allCluesUnlocked() 
+                ? '🚪 Tous les indices sont récoltés. Tentez la Sortie.'
+                : count + '/5 indices récoltés';
+            
+            card.innerHTML = `
+                <div class="clue-card-scene">${clue.scene}</div>
+                <div class="clue-card-icon">${clue.icon}</div>
+                <div class="clue-card-title">Indice débloqué</div>
+                <div class="clue-card-text">${clue.text}</div>
+                <div class="clue-card-progress">${lockMsg}</div>
+                <button class="btn" onclick="closeClueModal()">Continuer</button>
+            `;
+            
+            overlay.classList.add('visible');
+        }
+        
+        function closeClueModal() {
+            document.getElementById('clueOverlay').classList.remove('visible');
+        }
+        
+        // ============================================
+        // LOCK SCREEN
+        // ============================================
+        function initLockScreen() {
+            const screen = document.getElementById('lockScreen');
+            
+            screen.innerHTML = `
+                <div class="lock-card">
+                    <div class="lock-title">🚪 Sortie</div>
+                    <div class="lock-narrative">
+                        La journée de Léo touche à sa fin.<br>
+                        Cinq moments, cinq indices, un seul code.<br>
+                        Reconstitue le fil de sa journée pour l'aider à retrouver sa lucidité.
+                    </div>
+                    
+                    <div class="lock-fields">
+                        <div class="lock-field-group">
+                            <div class="lock-field-label">Matin</div>
+                            <input type="text" class="lock-field-input" id="lock-1" placeholder="· · ·" maxlength="10" autocomplete="off">
+                        </div>
+                        <div class="lock-field-group">
+                            <div class="lock-field-label">Trajet</div>
+                            <input type="text" class="lock-field-input" id="lock-2" placeholder="· · ·" maxlength="10" autocomplete="off">
+                        </div>
+                        <div class="lock-field-group">
+                            <div class="lock-field-label">Classe</div>
+                            <input type="text" class="lock-field-input" id="lock-3" placeholder="· · ·" maxlength="10" autocomplete="off">
+                        </div>
+                        <div class="lock-field-group">
+                            <div class="lock-field-label">Soirée</div>
+                            <input type="text" class="lock-field-input" id="lock-4" placeholder="· · ·" maxlength="10" autocomplete="off">
+                        </div>
+                        <div class="lock-field-group">
+                            <div class="lock-field-label">Nuit</div>
+                            <input type="text" class="lock-field-input" id="lock-5" placeholder="· · ·" maxlength="10" autocomplete="off">
+                        </div>
+                    </div>
+                    
+                    <div class="lock-feedback" id="lockFeedback"></div>
+                    
+                    <button class="btn" onclick="tryLockCombination()">Ouvrir la porte</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                </div>
+            `;
+            
+            showScreen('lockScreen');
+        }
+        
+        function normalizeLockAnswer(str) {
+            return str.trim().toLowerCase()
+                .replace(/\s+/g, '')
+                .replace(/[:h]/g, '')
+                .replace(/^0+/, '');
+        }
+        
+        function tryLockCombination() {
+            const answers = [
+                document.getElementById('lock-1').value,
+                document.getElementById('lock-2').value,
+                document.getElementById('lock-3').value,
+                document.getElementById('lock-4').value,
+                document.getElementById('lock-5').value
+            ];
+            
+            // Expected: 10h, VERT, 1918, NON, 2347
+            const expected = [
+                ['10', '1000', '10h', '10h00'],
+                ['vert'],
+                ['1918'],
+                ['non'],
+                ['2347', '23h47', '2347']
+            ];
+            
+            let allCorrect = true;
+            for (let i = 0; i < 5; i++) {
+                const normalized = normalizeLockAnswer(answers[i]);
+                const valid = expected[i].some(exp => normalizeLockAnswer(exp) === normalized);
+                if (!valid) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+            
+            const feedback = document.getElementById('lockFeedback');
+            
+            if (allCorrect) {
+                escapeState.lockCompleted = true;
+                updateEscapeUI();
+                playSuccessSound();
+                showFinalSuccess();
+            } else {
+                feedback.className = 'lock-feedback error';
+                const hints = [
+                    'Le code n\'est pas le bon. Repense aux indices...',
+                    'Quelque chose ne colle pas. Revois chaque moment de la journée.',
+                    'Pas encore. Chaque indice cache une réponse simple.',
+                    'La porte résiste. Relis les indices attentivement.',
+                    'Ce n\'est pas la bonne combinaison. La réponse est dans l\'histoire de Léo.'
+                ];
+                feedback.textContent = hints[Math.floor(Math.random() * hints.length)];
+                
+                // Shake animation
+                feedback.style.animation = 'none';
+                setTimeout(() => feedback.style.animation = 'fadeIn 0.3s ease', 10);
+            }
+        }
+        
+        function playSuccessSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const notes = [523.25, 659.25, 783.99, 1046.5];
+                notes.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.6);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + i * 0.15);
+                    osc.stop(ctx.currentTime + i * 0.15 + 0.6);
+                });
+            } catch(e) {}
+        }
+        
+        function showFinalSuccess() {
+            const screen = document.getElementById('lockScreen');
+            
+            // Stop timer and record remaining time
+            stopGlobalTimer();
+            const timeUsed = TOTAL_SECONDS - globalSecondsLeft;
+            const mins = Math.floor(timeUsed / 60);
+            const secs = timeUsed % 60;
+            const timeStr = mins + ' min ' + String(secs).padStart(2, '0') + ' s';
+            
+            // Reset lucidity to max
+            updateLucidity(10);
+            
+            screen.innerHTML = `
+                <div class="final-success">
+                    <div class="final-success-icon">🔓</div>
+                    <div class="final-success-title">La porte s'ouvre.</div>
+                    <div class="final-success-text">
+                        10h, un feu vert, une date d'Histoire, un refus, et une heure tardive.<br><br>
+                        Cinq moments ordinaires d'une journée qui ne l'était pas.<br><br>
+                        Comprendre ce qui altère nos perceptions, c'est déjà reprendre le contrôle. 
+                        Léo peut maintenant voir sa journée telle qu'elle était vraiment — 
+                        avec lucidité.<br><br>
+                        <span style="color: var(--warning); font-size: 0.8rem;">Terminé en ${timeStr}</span>
+                    </div>
+                    <button class="btn" onclick="returnToMenu()">Retour au menu</button>
+                </div>
+            `;
+        }
         
         // Adjust lucidity with buttons
         function adjustLucidity(delta) {
@@ -675,7 +1261,9 @@
             }
         }
         
-        // Update lucidity display and subtle visual effects
+        // Update lucidity display and visual effects
+        // Bar is DIRECT: full at high lucidity (sober), empty at low lucidity (impaired)
+        // Fog/blur are INVERSE: strongest at low lucidity
         function updateLucidity(value) {
             lucidityLevel = Math.max(0, Math.min(10, value));
             const percentage = (lucidityLevel / 10) * 100;
@@ -684,39 +1272,36 @@
             bar.style.width = percentage + '%';
             document.getElementById('lucidityValue').textContent = lucidityLevel + ' / 10';
             
-            // Update bar color from green to red
-            // 0-3: Green (#7fb069)
-            // 4-6: Yellow/Orange
-            // 7-10: Red (#e94560)
+            // Bar color: green when lucidity high, red when lucidity low
             let barColor;
-            if (lucidityLevel <= 3) {
-                // Green zone: interpolate from bright green to yellow-green
-                const ratio = lucidityLevel / 3;
+            if (lucidityLevel >= 7) {
+                // Green zone (high lucidity = sober)
+                const ratio = (10 - lucidityLevel) / 3;
                 barColor = interpolateColor('#7fb069', '#b8d96f', ratio);
-            } else if (lucidityLevel <= 6) {
+            } else if (lucidityLevel >= 4) {
                 // Yellow-orange zone
-                const ratio = (lucidityLevel - 3) / 3;
+                const ratio = (7 - lucidityLevel) / 3;
                 barColor = interpolateColor('#b8d96f', '#f5a742', ratio);
             } else {
-                // Red zone
-                const ratio = (lucidityLevel - 6) / 4;
+                // Red zone (low lucidity = very impaired)
+                const ratio = (4 - lucidityLevel) / 4;
                 barColor = interpolateColor('#f5a742', '#e94560', ratio);
             }
             
             bar.style.backgroundColor = barColor;
             
-            // Update fog effect
-            updateFog(lucidityLevel);
+            // Fog effect: INVERSE of lucidity (low lucidity = more fog)
+            const impairment = 10 - lucidityLevel;
+            updateFog(impairment);
             
-            // Update subtle visual effect based on lucidity
-            // Higher lucidity = more haze/blur (representing impairment)
+            // Visual blur: INVERSE of lucidity
             document.body.classList.remove('blur-heavy', 'blur-medium', 'blur-light');
             
-            if (lucidityLevel >= 7) {
+            if (impairment >= 7) {
                 document.body.classList.add('blur-heavy');
-            } else if (lucidityLevel >= 4) {
+            } else if (impairment >= 4) {
                 document.body.classList.add('blur-medium');
-            } else if (lucidityLevel >= 1) {
+            } else if (impairment >= 1) {
                 document.body.classList.add('blur-light');
             }
         }
@@ -867,6 +1452,7 @@
         function returnToMenu() {
             showScreen('menuScreen');
             currentGame = null;
+            updateEscapeUI();
         }
         
         // Start a game
@@ -889,6 +1475,9 @@
                 case 'time':
                     initTimeGame();
                     break;
+                case 'lock':
+                    initLockScreen();
+                    break;
             }
         }
         
@@ -908,24 +1497,23 @@
         function initMemoryGame() {
             const screen = document.getElementById('memoryScreen');
             
-            // Determine difficulty based on lucidity
-            // Base: 12 cards at lucidity 1, +2 cards per level
-            // Lucidity 1 = 12 cards (6 pairs)
-            // Lucidity 5 = 20 cards (10 pairs)
-            // Lucidity 10 = 30 cards (15 pairs)
-            const basePairs = 6; // 12 cards at lucidity 1
-            const pairsPerLevel = 1; // +2 cards = +1 pair per level
-            let numPairs = Math.max(3, basePairs + (lucidityLevel - 1) * pairsPerLevel);
-            numPairs = Math.min(15, numPairs); // Cap at 15 pairs (30 cards)
+            // Difficulty based on impairment (10 - lucidity)
+            // Low lucidity = high impairment = harder
+            const impairment = 10 - lucidityLevel;
             
-            // Flip delay gets shorter with higher lucidity (harder)
+            const basePairs = 6;
+            const pairsPerLevel = 1;
+            let numPairs = Math.max(3, basePairs + (impairment - 1) * pairsPerLevel);
+            numPairs = Math.min(15, numPairs);
+            
+            // Flip delay: shorter at high impairment (harder to memorize)
             let flipDelay;
-            if (lucidityLevel <= 3) {
-                flipDelay = 2000; // Easy: 2 seconds
-            } else if (lucidityLevel <= 6) {
-                flipDelay = 1000; // Medium: 1 second
+            if (impairment <= 3) {
+                flipDelay = 2000;
+            } else if (impairment <= 6) {
+                flipDelay = 1000;
             } else {
-                flipDelay = 500; // Hard: 0.5 seconds
+                flipDelay = 500;
             }
             
             const symbols = ['🍃', '🌿', '💚', '🟢', '🌱', '🍀', '🌳', '🌲', '🥬', '🫒', '🍈', '🥝', '🐸', '🦎', '🐢'];
@@ -1013,7 +1601,7 @@
                         cards[second].textContent = '?';
                         memoryState.flipped = [];
                         
-                        // Reshuffle at low lucidity
+                        // Reshuffle at high impairment (low lucidity)
                         if (lucidityLevel <= 1) {
                             memoryState.turnCount++;
                             if (memoryState.turnCount % 3 === 0) {
@@ -1049,27 +1637,45 @@
             clearInterval(memoryState.timerInterval);
             const screen = document.getElementById('memoryScreen');
             
-            if (won) {
-                updateLucidity(lucidityLevel + 1);
-            } else {
-                updateLucidity(lucidityLevel - 1);
-            }
-            
-            screen.innerHTML = `
-                <div class="result-message">
-                    <div class="result-title ${won ? 'success' : 'failure'}">
-                        ${won ? '✓ Réussi !' : '✗ Temps écoulé'}
+            if (won && !escapeState.clues.memory.unlocked) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Toutes les paires trouvées !</p>
+                        <p>Coups joués: ${memoryState.moves}</p>
                     </div>
-                    <p>${won ? 'Toutes les paires trouvées !' : 'Vous n\'avez pas terminé à temps.'}</p>
-                    <p>Coups joués: ${memoryState.moves}</p>
-                </div>
-                <div class="edu-message">
-                    <div class="edu-icon">🧠</div>
-                    <div>Le cannabis affecte directement l'hippocampe, la région du cerveau responsable de la mémoire à court terme. Plus la consommation est régulière, plus ces déficits deviennent marqués.</div>
-                </div>
-                <button class="btn" onclick="initMemoryGame()">Rejouer</button>
-                <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
-            `;
+                    <button class="btn" onclick="returnToMenu()">Retour au menu</button>
+                `;
+                setTimeout(() => showClueModal('memory'), 600);
+            } else if (won) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Toutes les paires trouvées !</p>
+                        <p>Coups joués: ${memoryState.moves}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🔓</div>
+                        <div>Indice déjà récolté pour cette épreuve.</div>
+                    </div>
+                    <button class="btn" onclick="initMemoryGame()">Rejouer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title failure">✗ Temps écoulé</div>
+                        <p>Vous n'avez pas terminé à temps.</p>
+                        <p>Coups joués: ${memoryState.moves}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🧠</div>
+                        <div>Le cannabis affecte directement l'hippocampe, la région du cerveau responsable de la mémoire à court terme. Plus la consommation est régulière, plus ces déficits deviennent marqués.</div>
+                    </div>
+                    <button class="btn" onclick="initMemoryGame()">Réessayer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            }
         }
         
         // ============================================
@@ -1123,18 +1729,21 @@
                 reflexState.currentTarget.remove();
             }
             
-            // Determine difficulty based on lucidity (higher = harder)
-            // Size: larger at low lucidity, smaller at high lucidity
-            const size = Math.max(40, 80 - (lucidityLevel * 4));
+            // Difficulty based on impairment (10 - lucidity)
+            // Low lucidity = high impairment = harder
+            const impairment = 10 - lucidityLevel;
             
-            // Timeout: more time at low lucidity, less at high lucidity
-            const timeout = Math.max(800, 2000 - (lucidityLevel * 120));
+            // Size: smaller at high impairment (harder to click)
+            const size = Math.max(40, 80 - (impairment * 4));
             
-            // Decoy chance: increases with lucidity
-            const decoyChance = Math.min(0.5, lucidityLevel * 0.05);
+            // Timeout: less time at high impairment
+            const timeout = Math.max(800, 2000 - (impairment * 120));
             
-            // Movement speed: increases with lucidity
-            const speed = Math.max(0, (lucidityLevel - 3) * 0.5);
+            // Decoy chance: increases with impairment
+            const decoyChance = Math.min(0.5, impairment * 0.05);
+            
+            // Movement speed: increases with impairment
+            const speed = Math.max(0, (impairment - 3) * 0.5);
             
             const isDecoy = Math.random() < decoyChance;
             const target = document.createElement('div');
@@ -1156,7 +1765,7 @@
             area.appendChild(target);
             reflexState.currentTarget = target;
             
-            // Erratic movement at low lucidity
+            // Erratic movement at high impairment
             if (speed > 0) {
                 let dx = (Math.random() - 0.5) * speed;
                 let dy = (Math.random() - 0.5) * speed;
@@ -1222,27 +1831,43 @@
             clearInterval(reflexState.gameInterval);
             const screen = document.getElementById('reflexScreen');
             
-            if (won) {
-                updateLucidity(lucidityLevel + 1);
-            } else {
-                updateLucidity(lucidityLevel - 1);
-            }
-            
-            screen.innerHTML = `
-                <div class="result-message">
-                    <div class="result-title ${won ? 'success' : 'failure'}">
-                        ${won ? '✓ Réussi !' : '✗ Trop d\'erreurs'}
+            if (won && !escapeState.clues.reflex.unlocked) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Cibles touchées: ${reflexState.hitCount}</p>
                     </div>
-                    <p>Cibles touchées: ${reflexState.hitCount}</p>
-                    <p>Erreurs: ${reflexState.missCount + reflexState.decoyHits}</p>
-                </div>
-                <div class="edu-message">
-                    <div class="edu-icon">⚡</div>
-                    <div>Le cannabis ralentit les réflexes et la coordination œil-main. Ces effets persistent plusieurs heures et sont particulièrement dangereux au volant ou dans toute activité nécessitant des réactions rapides.</div>
-                </div>
-                <button class="btn" onclick="initReflexGame()">Rejouer</button>
-                <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
-            `;
+                    <button class="btn" onclick="returnToMenu()">Retour au menu</button>
+                `;
+                setTimeout(() => showClueModal('reflex'), 600);
+            } else if (won) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Cibles touchées: ${reflexState.hitCount}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🔓</div>
+                        <div>Indice déjà récolté pour cette épreuve.</div>
+                    </div>
+                    <button class="btn" onclick="initReflexGame()">Rejouer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title failure">✗ Trop d'erreurs</div>
+                        <p>Cibles touchées: ${reflexState.hitCount}</p>
+                        <p>Erreurs: ${reflexState.missCount + reflexState.decoyHits}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">⚡</div>
+                        <div>Le cannabis ralentit les réflexes et la coordination œil-main. Ces effets persistent plusieurs heures et sont particulièrement dangereux au volant.</div>
+                    </div>
+                    <button class="btn" onclick="initReflexGame()">Réessayer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            }
         }
         
         // ============================================
@@ -1347,22 +1972,23 @@
                 clearTimeout(concentrationState.ruleChangeInterval);
             }
             
-            // Calculate irregular delay based on lucidity
-            // Higher lucidity = shorter and MORE irregular intervals
+            // Calculate irregular delay based on impairment
+            // Higher impairment = shorter and MORE irregular intervals
+            const impairment = 10 - lucidityLevel;
             let minDelay, maxDelay;
             
-            if (lucidityLevel <= 1) {
-                minDelay = 18000; maxDelay = 22000; // 18-22s, très régulier
-            } else if (lucidityLevel <= 3) {
-                minDelay = 12000; maxDelay = 18000; // 12-18s
-            } else if (lucidityLevel <= 5) {
-                minDelay = 8000; maxDelay = 15000;  // 8-15s
-            } else if (lucidityLevel <= 7) {
-                minDelay = 5000; maxDelay = 12000;  // 5-12s, plus irrégulier
-            } else if (lucidityLevel <= 9) {
-                minDelay = 3000; maxDelay = 9000;   // 3-9s, très irrégulier
+            if (impairment <= 1) {
+                minDelay = 18000; maxDelay = 22000; // très régulier
+            } else if (impairment <= 3) {
+                minDelay = 12000; maxDelay = 18000;
+            } else if (impairment <= 5) {
+                minDelay = 8000; maxDelay = 15000;
+            } else if (impairment <= 7) {
+                minDelay = 5000; maxDelay = 12000;
+            } else if (impairment <= 9) {
+                minDelay = 3000; maxDelay = 9000;
             } else {
-                minDelay = 2000; maxDelay = 7000;   // 2-7s, chaos maximum
+                minDelay = 2000; maxDelay = 7000; // chaos maximum
             }
             
             const delay = minDelay + Math.random() * (maxDelay - minDelay);
@@ -1535,27 +2161,43 @@
             clearTimeout(concentrationState.ruleChangeInterval);
             const screen = document.getElementById('concentrationScreen');
             
-            if (won) {
-                updateLucidity(lucidityLevel + 1);
-            } else {
-                updateLucidity(lucidityLevel - 1);
-            }
-            
-            screen.innerHTML = `
-                <div class="result-message">
-                    <div class="result-title ${won ? 'success' : 'failure'}">
-                        ${won ? '✓ Réussi !' : '✗ Trop d\'erreurs'}
+            if (won && !escapeState.clues.concentration.unlocked) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Éléments corrects: ${concentrationState.score}</p>
                     </div>
-                    <p>Éléments corrects: ${concentrationState.score}</p>
-                    <p>Erreurs: ${concentrationState.errors}</p>
-                </div>
-                <div class="edu-message">
-                    <div class="edu-icon">🎯</div>
-                    <div>Le cannabis altère la capacité de concentration et rend difficile de filtrer les distractions. Cela impacte directement les performances scolaires et la capacité à réaliser des tâches complexes.</div>
-                </div>
-                <button class="btn" onclick="initConcentrationGame()">Rejouer</button>
-                <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
-            `;
+                    <button class="btn" onclick="returnToMenu()">Retour au menu</button>
+                `;
+                setTimeout(() => showClueModal('concentration'), 600);
+            } else if (won) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Éléments corrects: ${concentrationState.score}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🔓</div>
+                        <div>Indice déjà récolté pour cette épreuve.</div>
+                    </div>
+                    <button class="btn" onclick="initConcentrationGame()">Rejouer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title failure">✗ Trop d'erreurs</div>
+                        <p>Éléments corrects: ${concentrationState.score}</p>
+                        <p>Erreurs: ${concentrationState.errors}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🎯</div>
+                        <div>Le cannabis altère la capacité de concentration et rend difficile de filtrer les distractions. Cela impacte directement les performances scolaires.</div>
+                    </div>
+                    <button class="btn" onclick="initConcentrationGame()">Réessayer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            }
         }
         
         // ============================================
@@ -1637,13 +2279,11 @@
                 }
             ];
             
-            // Select scenarios based on lucidity (higher = harder)
-            // Lucidity 1-3: easy scenarios
-            // Lucidity 4-7: medium scenarios
-            // Lucidity 8-10: hard scenarios
-            if (lucidityLevel <= 3) {
+            // Select scenarios based on impairment (higher = harder)
+            const impairment = 10 - lucidityLevel;
+            if (impairment <= 3) {
                 decisionState.scenarios = easyScenarios;
-            } else if (lucidityLevel <= 7) {
+            } else if (impairment <= 7) {
                 decisionState.scenarios = mediumScenarios;
             } else {
                 decisionState.scenarios = hardScenarios;
@@ -1669,9 +2309,9 @@
             const content = document.getElementById('decisionContent');
             const scenario = decisionState.scenarios[decisionState.currentScenario];
             
-            // Time pressure: 40s at level 1, -2s per level → 20s at level 10
-            // Always active at all levels
-            let timeLimit = Math.max(20, 40 - (lucidityLevel * 2));
+            // Time pressure based on impairment: 40s at level 0 → 20s at level 10
+            const impairment = 10 - lucidityLevel;
+            let timeLimit = Math.max(20, 40 - (impairment * 2));
             let timerHTML = `<div class="game-timer" id="decisionTimer">${timeLimit}s</div>`;
             
             content.innerHTML = `
@@ -1724,26 +2364,42 @@
         function endDecisionGame(won) {
             const screen = document.getElementById('decisionScreen');
             
-            if (won) {
-                updateLucidity(lucidityLevel + 1);
-            } else {
-                updateLucidity(lucidityLevel - 1);
-            }
-            
-            screen.innerHTML = `
-                <div class="result-message">
-                    <div class="result-title ${won ? 'success' : 'failure'}">
-                        ${won ? '✓ Réussi !' : '✗ Échec'}
+            if (won && !escapeState.clues.decision.unlocked) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Bonnes décisions: ${decisionState.correctChoices}/${decisionState.scenarios.length}</p>
                     </div>
-                    <p>Bonnes décisions: ${decisionState.correctChoices}/${decisionState.scenarios.length}</p>
-                </div>
-                <div class="edu-message">
-                    <div class="edu-icon">🤔</div>
-                    <div>Le cannabis affecte les fonctions exécutives du cerveau, rendant plus difficile l'évaluation des risques et la prise de décisions complexes. Cet effet peut persister bien après la consommation.</div>
-                </div>
-                <button class="btn" onclick="initDecisionGame()">Rejouer</button>
-                <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
-            `;
+                    <button class="btn" onclick="returnToMenu()">Retour au menu</button>
+                `;
+                setTimeout(() => showClueModal('decision'), 600);
+            } else if (won) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Bonnes décisions: ${decisionState.correctChoices}/${decisionState.scenarios.length}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🔓</div>
+                        <div>Indice déjà récolté pour cette épreuve.</div>
+                    </div>
+                    <button class="btn" onclick="initDecisionGame()">Rejouer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title failure">✗ Échec</div>
+                        <p>Bonnes décisions: ${decisionState.correctChoices}/${decisionState.scenarios.length}</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🤔</div>
+                        <div>Le cannabis affecte les fonctions exécutives du cerveau, rendant plus difficile l'évaluation des risques et la prise de décisions complexes.</div>
+                    </div>
+                    <button class="btn" onclick="initDecisionGame()">Réessayer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            }
         }
         
         // ============================================
@@ -1764,13 +2420,16 @@
             timeState.isRunning = false;
             timeState.startTime = 0;
             
-            // Set target time based on lucidity: 5s at level 0, up to 15s at level 10
-            timeState.targetTime = 5 + lucidityLevel;
+            // Difficulty based on impairment
+            const impairment = 10 - lucidityLevel;
             
-            // Display delay increases with lucidity (perceptual distortion)
-            if (lucidityLevel <= 3) {
+            // Target time: 5s at impairment 0, up to 15s at impairment 10
+            timeState.targetTime = 5 + impairment;
+            
+            // Display delay increases with impairment (perceptual distortion)
+            if (impairment <= 3) {
                 timeState.displayDelay = 0;
-            } else if (lucidityLevel <= 6) {
+            } else if (impairment <= 6) {
                 timeState.displayDelay = 300;
             } else {
                 timeState.displayDelay = 800;
@@ -1804,14 +2463,12 @@
                 const actualTime = (Date.now() - timeState.startTime) / 1000;
                 const error = Math.abs(actualTime - timeState.targetTime);
                 
-                // Tolerance gets tighter with higher lucidity (harder)
-                // Lucidity 1-3: ±2s tolerance
-                // Lucidity 4-6: ±1.5s tolerance
-                // Lucidity 7-10: ±1s tolerance
+                // Tolerance tighter at high impairment (harder)
+                const impairment = 10 - lucidityLevel;
                 let tolerance;
-                if (lucidityLevel <= 3) {
+                if (impairment <= 3) {
                     tolerance = 2.0;
-                } else if (lucidityLevel <= 6) {
+                } else if (impairment <= 6) {
                     tolerance = 1.5;
                 } else {
                     tolerance = 1.0;
@@ -1825,33 +2482,149 @@
         function endTimeGame(won, actualTime, error) {
             const screen = document.getElementById('timeScreen');
             
-            if (won) {
-                updateLucidity(lucidityLevel + 1);
-            } else {
-                updateLucidity(lucidityLevel - 1);
-            }
-            
-            screen.innerHTML = `
-                <div class="result-message">
-                    <div class="result-title ${won ? 'success' : 'failure'}">
-                        ${won ? '✓ Réussi !' : '✗ Trop imprécis'}
+            if (won && !escapeState.clues.time.unlocked) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Temps cible: ${timeState.targetTime}s</p>
+                        <p>Votre estimation: ${actualTime.toFixed(2)}s</p>
+                        <p>Erreur: ${error.toFixed(2)}s</p>
                     </div>
-                    <p>Temps cible: ${timeState.targetTime}s</p>
-                    <p>Votre estimation: ${actualTime.toFixed(2)}s</p>
-                    <p>Erreur: ${error.toFixed(2)}s</p>
-                </div>
-                <div class="edu-message">
-                    <div class="edu-icon">⏱️</div>
-                    <div>Le cannabis déforme la perception du temps : les secondes semblent durer plus longtemps. Cette distorsion affecte le jugement dans les situations nécessitant une évaluation temporelle précise.</div>
-                </div>
-                <button class="btn" onclick="initTimeGame()">Rejouer</button>
-                <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
-            `;
+                    <button class="btn" onclick="returnToMenu()">Retour au menu</button>
+                `;
+                setTimeout(() => showClueModal('time'), 600);
+            } else if (won) {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title success">✓ Réussi !</div>
+                        <p>Temps cible: ${timeState.targetTime}s</p>
+                        <p>Votre estimation: ${actualTime.toFixed(2)}s</p>
+                        <p>Erreur: ${error.toFixed(2)}s</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">🔓</div>
+                        <div>Indice déjà récolté pour cette épreuve.</div>
+                    </div>
+                    <button class="btn" onclick="initTimeGame()">Rejouer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <div class="result-message">
+                        <div class="result-title failure">✗ Trop imprécis</div>
+                        <p>Temps cible: ${timeState.targetTime}s</p>
+                        <p>Votre estimation: ${actualTime.toFixed(2)}s</p>
+                        <p>Erreur: ${error.toFixed(2)}s</p>
+                    </div>
+                    <div class="edu-message">
+                        <div class="edu-icon">⏱️</div>
+                        <div>Le cannabis déforme la perception du temps : les secondes semblent durer plus longtemps. Cette distorsion affecte le jugement dans de nombreuses situations.</div>
+                    </div>
+                    <button class="btn" onclick="initTimeGame()">Réessayer</button>
+                    <button class="btn btn-secondary" onclick="returnToMenu()">Retour au menu</button>
+                `;
+            }
         }
         
         // Initialize
         initFogParticles();
-        updateLucidity(3);
+        updateLucidity(7);
+        updateEscapeUI();
+        
+        // ============================================
+        // GLOBAL COUNTDOWN TIMER - 1 HOUR
+        // ============================================
+        const TOTAL_SECONDS = 60 * 60; // 1 hour
+        let globalSecondsLeft = TOTAL_SECONDS;
+        let globalTimerInterval = null;
+        
+        function formatCountdown(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+        
+        function updateGlobalTimerDisplay() {
+            const el = document.getElementById('globalTimerValue');
+            if (!el) return;
+            
+            el.textContent = formatCountdown(globalSecondsLeft);
+            
+            // Visual states
+            el.classList.remove('warning', 'critical', 'expired');
+            if (globalSecondsLeft <= 0) {
+                el.classList.add('expired');
+                el.textContent = '00:00';
+            } else if (globalSecondsLeft <= 120) {
+                el.classList.add('critical');
+            } else if (globalSecondsLeft <= 600) {
+                el.classList.add('warning');
+            }
+        }
+        
+        function startGlobalTimer() {
+            updateGlobalTimerDisplay();
+            globalTimerInterval = setInterval(() => {
+                globalSecondsLeft--;
+                updateGlobalTimerDisplay();
+                
+                if (globalSecondsLeft <= 0) {
+                    clearInterval(globalTimerInterval);
+                    globalTimerInterval = null;
+                    onGlobalTimeUp();
+                }
+            }, 1000);
+        }
+        
+        function stopGlobalTimer() {
+            if (globalTimerInterval) {
+                clearInterval(globalTimerInterval);
+                globalTimerInterval = null;
+            }
+        }
+        
+        function onGlobalTimeUp() {
+            // Stop any active game timers
+            if (memoryState.timerInterval) clearInterval(memoryState.timerInterval);
+            if (reflexState.gameInterval) clearInterval(reflexState.gameInterval);
+            if (concentrationState.animationFrame) cancelAnimationFrame(concentrationState.animationFrame);
+            if (concentrationState.ruleChangeInterval) clearTimeout(concentrationState.ruleChangeInterval);
+            
+            // Show time-up screen
+            const lockScreen = document.getElementById('lockScreen');
+            lockScreen.innerHTML = `
+                <div class="final-success" style="padding-top: 3rem;">
+                    <div class="final-success-icon">⏰</div>
+                    <div class="final-success-title">Le temps est écoulé.</div>
+                    <div class="final-success-text">
+                        La journée de Léo est terminée, mais la porte reste fermée.<br><br>
+                        Chaque minute qui passe sous l'effet du cannabis est une minute où la lucidité s'éloigne.
+                        Il n'est jamais trop tard pour réessayer — avec un esprit plus clair.
+                    </div>
+                    <button class="btn" onclick="restartEscapeGame()">Recommencer</button>
+                </div>
+            `;
+            showScreen('lockScreen');
+        }
+        
+        function restartEscapeGame() {
+            // Reset escape state
+            for (const key of Object.keys(escapeState.clues)) {
+                escapeState.clues[key].unlocked = false;
+            }
+            escapeState.lockCompleted = false;
+            updateEscapeUI();
+            
+            // Reset timer
+            globalSecondsLeft = TOTAL_SECONDS;
+            startGlobalTimer();
+            
+            // Return to menu
+            returnToMenu();
+        }
+        
+        // Start the global timer on page load
+        startGlobalTimer();
         
         // Initialize button states
         document.getElementById('decreaseLucidity').disabled = (lucidityLevel === 0);
